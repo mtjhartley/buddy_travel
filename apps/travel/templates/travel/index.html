@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>TRAVEL</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">    </head>
+    <body>
+        <div class='container-fluid'>
+            <h1>Welcome to TRAVEL, {{request.session.name}}</h1>
+            <h2>Your Trip Schedules</h2>
+            <table class='table table-hover'>
+                <thead>
+                    <tr>
+                        <th>Destination</th>
+                        <th>Travel Start Date</th>
+                        <th>Travel End Date</th>
+                        <th>Plan</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for destination in destinations %}
+                    <tr>
+                        <td><a href="{% url 'travel:show' destination.id %}">{{destination.place}}</a></td>
+                        <td>{{destination.start_date|date:"M d Y"}}</td>
+                        <td>{{destination.end_date|date:"M d Y"}}</td>
+                        <td>{{destination.plan}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>Other User's Travel Plans</h2>
+            <table class='table table-hover'>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Destination</th>
+                        <th>Travel Start Date</th>
+                        <th>Travel End Date</th>
+                        <th>Do You Want To Join?</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for destination in not_destinations %}
+                    <tr>
+                        <td>{{destination.creator.name}}</td>
+                        <td><a href="{% url 'travel:show' destination.id %}">{{destination.place}}</a></td>
+                        <td>{{destination.start_date|date:"M d Y"}}</td>
+                        <td>{{destination.end_date|date:"M d Y"}}</td>
+                        <td>
+                            <form action="{% url 'travel:join' destination.id %}" method='post'>
+                                {% csrf_token %}
+                                <button class='btn btn-link' type='submit'>Join</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h3><a href="{% url 'travel:new' %}">Add Travel Plan</a></h3>
+
+            <h3><a href="{% url 'auth:logout' %}">Logout?</a></h3>
+        <div>
+    
+    </body>
+</html>
